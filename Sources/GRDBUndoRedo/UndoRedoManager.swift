@@ -75,6 +75,20 @@ public class UndoRedoManager {
         
         try reactivate()
     }
+
+    /// Initializes the undo/redo system. 
+    ///
+    /// Arguments should be one or more database tables (in the database associated
+    /// with the handle "db") whose changes are to be recorded for undo/redo purposes.
+    public init(tableNames: [String], db: DatabaseQueue, tablePrefix: String = "") throws {
+        self.dbQueue = db
+        let prefix = tablePrefix == "" ? "" : "\(tablePrefix)_"
+        self.tablePrefix = prefix
+        self.undologTableName = "\(prefix)undolog"
+        self.observedRecordTypes = Set(tableNames)
+        
+        try reactivate()
+    }
     
     deinit {
         try? deactivate()
